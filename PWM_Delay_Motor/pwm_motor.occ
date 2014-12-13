@@ -1,0 +1,21 @@
+CC8E Version 1.3D, Copyright (c) B Knudsen Data, Norway 2001-2010
+ --> FREE edition, 8-16 bit int, 24 bit float, 128k code words, reduced optim.
+pwm_motor.c:
+  5. Nov 2014  18:39
+ Chip = 18F452
+ RAM : ===***** ******** ******** ******** ******** ******** ******** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: ******** ******** ******** ******** ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** ******** ********
+ Bank  0:253  1:256  2:256  3:256  4:256  5:256  bytes free
+RAM usage: 3 bytes (3 local), 1533 bytes free
+ File 'pwm_motor.fcs'
+ Optimizing - removed 9 code words (-20 %)
+ File 'pwm_motor.var'
+ File 'pwm_motor.asm'
+ File 'pwm_motor.lst'
+ File 'pwm_motor.cod'
+ File 'pwm_motor.occ'
+ File 'pwm_motor.hex'
+Total of 47 code words (0 %)
+ * Estimated CODE SIZE of full optimization: 45 code words (-4 %)

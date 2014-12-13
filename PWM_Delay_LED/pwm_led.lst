@@ -1,0 +1,148 @@
+CC8E Version 1.3D,   File: pwm_led.c            5. Nov 2014  18:11   Page 1
+
+ADDR   CODE       LINE  SOURCE
+
+                  00001 
+                  00002 ; CC8E Version 1.3D, Copyright (c) B Knudsen Data
+                  00003 ; C compiler for the PIC18 microcontrollers
+                  00004 ; ************   5. Nov 2014  18:11  *************
+                  00005 
+                  00006 	processor  PIC18F452
+                  00007 	radix  DEC
+                  00008 
+300000 F1FF       00009 	__config 0x300001, 0xF1
+                  00010 
+       0000       00011 Carry       EQU   0
+       0002       00012 Zero_       EQU   2
+       0F96       00013 TRISE       EQU   0xF96
+       0F95       00014 TRISD       EQU   0xF95
+       0F94       00015 TRISC       EQU   0xF94
+       0F93       00016 TRISB       EQU   0xF93
+       0F92       00017 TRISA       EQU   0xF92
+       0F83       00018 PORTD       EQU   0xF83
+       0F82       00019 PORTC       EQU   0xF82
+       0007       00020 GIE         EQU   7
+       0000       00021 t           EQU   0x00
+       0002       00022 x           EQU   0x02
+                  00023 
+000000 EF02 F000  00024 	GOTO main
+                  00025 
+                  00026   ; FILE pwm_led.c
+                  00027 			;#pragma config[1] = 0xF1 // Osilatör: XT#pragma config[1] = 0xF1 // Osilatör: XT
+                  00028 			;void ayarlar();
+                  00029 			;void bekle(unsigned long t);	// t milisaniye gecikme saðlayan fonksiyon tanýmý
+                  00030 			;
+                  00031 			;void main()
+                  00032 			;{
+                  00033 main
+                  00034 			;	
+                  00035 			;	ayarlar();
+000004 D823       00036 	RCALL ayarlar
+                  00037 			;
+                  00038 			;//-----------------------------------------------	
+                  00039 			;anadongu:
+                  00040 			;
+                  00041 			;	bekle(1);	// Acquisition Time(Sample & Hold kapasitörünün þarj olmasý için gerekli zaman)
+000006 0E01       00042 m001	MOVLW 1
+000008 6E00       00043 	MOVWF t,0
+00000A 6A01       00044 	CLRF  t+1,0
+00000C D80B       00045 	RCALL bekle
+                  00046 			;	
+                  00047 			;	PORTC.0=1;
+00000E 8082       00048 	BSF   PORTC,0,0
+                  00049 			;   	bekle(0x7F); // %50 High 
+000010 0E7F       00050 	MOVLW 127
+000012 6E00       00051 	MOVWF t,0
+000014 6A01       00052 	CLRF  t+1,0
+000016 D806       00053 	RCALL bekle
+                  00054 			;    PORTC.0=0;
+000018 9082       00055 	BCF   PORTC,0,0
+                  00056 			;    bekle(0xFF-0x7F); // %50 Low 
+00001A 0E80       00057 	MOVLW 128
+00001C 6E00       00058 	MOVWF t,0
+00001E 6A01       00059 	CLRF  t+1,0
+000020 D801       00060 	RCALL bekle
+CC8E Version 1.3D,   File: pwm_led.c            5. Nov 2014  18:11   Page 2
+
+ADDR   CODE       LINE  SOURCE
+
+                  00061 			;
+                  00062 			;goto anadongu;
+000022 D7F1       00063 	BRA   m001
+                  00064 			;//-----------------------------------------------	
+                  00065 			;}
+                  00066 			;
+                  00067 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00068 			;
+                  00069 			;void bekle(unsigned long t)	//t milisaniye gecikme saðlar
+                  00070 			;{
+                  00071 bekle
+                  00072 			;	unsigned x;
+                  00073 			;	t=t/2;
+000024 90D8       00074 	BCF   0xFD8,Carry,0
+000026 3201       00075 	RRCF  t+1,1,0
+000028 3200       00076 	RRCF  t,1,0
+                  00077 			;	for(;t>0;t--)
+00002A 5000       00078 m002	MOVF  t,W,0
+00002C 1001       00079 	IORWF t+1,W,0
+00002E B4D8       00080 	BTFSC 0xFD8,Zero_,0
+000030 D00C       00081 	BRA   m005
+                  00082 			;		for(x=140;x>0;x--)
+000032 0E8C       00083 	MOVLW 140
+000034 6E02       00084 	MOVWF x,0
+000036 5202       00085 m003	MOVF  x,1,0
+000038 B4D8       00086 	BTFSC 0xFD8,Zero_,0
+00003A D003       00087 	BRA   m004
+                  00088 			;			nop();
+00003C 0000       00089 	NOP  
+00003E 0602       00090 	DECF  x,1,0
+000040 D7FA       00091 	BRA   m003
+000042 0600       00092 m004	DECF  t,1,0
+000044 0E00       00093 	MOVLW 0
+000046 5A01       00094 	SUBWFB t+1,1,0
+000048 D7F0       00095 	BRA   m002
+                  00096 			;}
+00004A 0012       00097 m005	RETURN
+                  00098 			;
+                  00099 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00100 			;
+                  00101 			;void ayarlar()	// Bütün baþlangýç ayarlarýnýn tamamlandýðý kýsým
+                  00102 			;{	
+                  00103 ayarlar
+                  00104 			;	GIE=0;			// Bütün kesmeleri kapat
+00004C 9EF2       00105 	BCF   0xFF2,GIE,0
+                  00106 			;	TRISA=0xFF;
+00004E 6892       00107 	SETF  TRISA,0
+                  00108 			;	TRISB=0xFF;
+000050 6893       00109 	SETF  TRISB,0
+                  00110 			;	TRISC=0x00;	
+000052 6A94       00111 	CLRF  TRISC,0
+                  00112 			;	TRISD=0x00;		
+000054 6A95       00113 	CLRF  TRISD,0
+                  00114 			;	TRISE=0xFF;
+000056 6896       00115 	SETF  TRISE,0
+                  00116 			;	
+                  00117 			;	PORTC=0x00;		
+000058 6A82       00118 	CLRF  PORTC,0
+                  00119 			;	PORTD=0x00;
+00005A 6A83       00120 	CLRF  PORTD,0
+CC8E Version 1.3D,   File: pwm_led.c            5. Nov 2014  18:11   Page 3
+
+ADDR   CODE       LINE  SOURCE
+
+                  00121 			;
+                  00122 			;}
+00005C 0012       00123 	RETURN
+                  00124 
+                  00125 	END
+                  00126 
+                  00127 
+                  00128 ; *** KEY INFO ***
+                  00129 
+                  00130 ; 0x00004C    9 word(s)  0 % : ayarlar
+                  00131 ; 0x000024   20 word(s)  0 % : bekle
+                  00132 ; 0x000004   16 word(s)  0 % : main
+                  00133 
+                  00134 ; RAM usage: 3 bytes (3 local), 1533 bytes free
+                  00135 ; Maximum call level: 1
+                  00136 ; Total of 47 code words (0 %)

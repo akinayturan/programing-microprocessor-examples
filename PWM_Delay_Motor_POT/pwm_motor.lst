@@ -1,0 +1,161 @@
+CC8E Version 1.3D,   File: pwm_motor.c          5. Nov 2014  18:20   Page 1
+
+ADDR   CODE       LINE  SOURCE
+
+                  00001 
+                  00002 ; CC8E Version 1.3D, Copyright (c) B Knudsen Data
+                  00003 ; C compiler for the PIC18 microcontrollers
+                  00004 ; ************   5. Nov 2014  18:20  *************
+                  00005 
+                  00006 	processor  PIC18F452
+                  00007 	radix  DEC
+                  00008 
+300000 F1FF       00009 	__config 0x300001, 0xF1
+                  00010 
+       0000       00011 Carry       EQU   0
+       0002       00012 Zero_       EQU   2
+       0FC4       00013 ADRESH      EQU   0xFC4
+       0FC2       00014 ADCON0      EQU   0xFC2
+       0FC1       00015 ADCON1      EQU   0xFC1
+       0F96       00016 TRISE       EQU   0xF96
+       0F95       00017 TRISD       EQU   0xF95
+       0F94       00018 TRISC       EQU   0xF94
+       0F93       00019 TRISB       EQU   0xF93
+       0F92       00020 TRISA       EQU   0xF92
+       0F83       00021 PORTD       EQU   0xF83
+       0F82       00022 PORTC       EQU   0xF82
+       0007       00023 GIE         EQU   7
+       0002       00024 GO          EQU   2
+       0000       00025 t           EQU   0x00
+       0002       00026 x           EQU   0x02
+                  00027 
+000000 EF02 F000  00028 	GOTO main
+                  00029 
+                  00030   ; FILE pwm_motor.c
+                  00031 			;#pragma config[1] = 0xF1 // Osilatör: XT#pragma config[1] = 0xF1 // Osilatör: XT
+                  00032 			;void ayarlar();
+                  00033 			;void bekle(unsigned long t);	// t milisaniye gecikme saðlayan fonksiyon tanýmý
+                  00034 			;
+                  00035 			;void main()
+                  00036 			;{
+                  00037 main
+                  00038 			;	
+                  00039 			;	ayarlar();
+000004 D826       00040 	RCALL ayarlar
+                  00041 			;
+                  00042 			;//-----------------------------------------------	
+                  00043 			;anadongu:
+                  00044 			;
+                  00045 			;	bekle(1);	// Acquisition Time(Sample & Hold kapasitörünün þarj olmasý için gerekli zaman)
+000006 0E01       00046 m001	MOVLW 1
+000008 6E00       00047 	MOVWF t,0
+00000A 6A01       00048 	CLRF  t+1,0
+00000C D80E       00049 	RCALL bekle
+                  00050 			;	
+                  00051 			;	GO=1;	// adc cevrimi baslar
+00000E 84C2       00052 	BSF   0xFC2,GO,0
+                  00053 			;	while(GO);	//cevirme bitene kadar calisir, cevirme bitince go=0 olur
+000010 B4C2       00054 m002	BTFSC 0xFC2,GO,0
+000012 D7FE       00055 	BRA   m002
+                  00056 			;    PORTC.0=1;
+000014 8082       00057 	BSF   PORTC,0,0
+                  00058 			;    bekle(ADRESH);
+000016 CFC4 F000  00059 	MOVFF ADRESH,t
+00001A 6A01       00060 	CLRF  t+1,0
+CC8E Version 1.3D,   File: pwm_motor.c          5. Nov 2014  18:20   Page 2
+
+ADDR   CODE       LINE  SOURCE
+
+00001C D806       00061 	RCALL bekle
+                  00062 			;    PORTC.0=0;
+00001E 9082       00063 	BCF   PORTC,0,0
+                  00064 			;    bekle(0xFF-ADRESH);
+000020 1CC4       00065 	COMF  ADRESH,W,0
+000022 6E00       00066 	MOVWF t,0
+000024 6A01       00067 	CLRF  t+1,0
+000026 D801       00068 	RCALL bekle
+                  00069 			;
+                  00070 			;goto anadongu;
+000028 D7EE       00071 	BRA   m001
+                  00072 			;//-----------------------------------------------	
+                  00073 			;}
+                  00074 			;
+                  00075 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00076 			;
+                  00077 			;void bekle(unsigned long t)	//t milisaniye gecikme saðlar
+                  00078 			;{
+                  00079 bekle
+                  00080 			;	unsigned x;
+                  00081 			;	t=t/2;
+00002A 90D8       00082 	BCF   0xFD8,Carry,0
+00002C 3201       00083 	RRCF  t+1,1,0
+00002E 3200       00084 	RRCF  t,1,0
+                  00085 			;	for(;t>0;t--)
+000030 5000       00086 m003	MOVF  t,W,0
+000032 1001       00087 	IORWF t+1,W,0
+000034 B4D8       00088 	BTFSC 0xFD8,Zero_,0
+000036 D00C       00089 	BRA   m006
+                  00090 			;		for(x=140;x>0;x--)
+000038 0E8C       00091 	MOVLW 140
+00003A 6E02       00092 	MOVWF x,0
+00003C 5202       00093 m004	MOVF  x,1,0
+00003E B4D8       00094 	BTFSC 0xFD8,Zero_,0
+000040 D003       00095 	BRA   m005
+                  00096 			;			nop();
+000042 0000       00097 	NOP  
+000044 0602       00098 	DECF  x,1,0
+000046 D7FA       00099 	BRA   m004
+000048 0600       00100 m005	DECF  t,1,0
+00004A 0E00       00101 	MOVLW 0
+00004C 5A01       00102 	SUBWFB t+1,1,0
+00004E D7F0       00103 	BRA   m003
+                  00104 			;}
+000050 0012       00105 m006	RETURN
+                  00106 			;
+                  00107 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00108 			;
+                  00109 			;void ayarlar()	// Bütün baþlangýç ayarlarýnýn tamamlandýðý kýsým
+                  00110 			;{	
+                  00111 ayarlar
+                  00112 			;	GIE=0;			// Bütün kesmeleri kapalý
+000052 9EF2       00113 	BCF   0xFF2,GIE,0
+                  00114 			;	TRISA=0xFF;
+000054 6892       00115 	SETF  TRISA,0
+                  00116 			;	TRISB=0xFF;
+000056 6893       00117 	SETF  TRISB,0
+                  00118 			;	TRISC=0x00;	
+000058 6A94       00119 	CLRF  TRISC,0
+                  00120 			;	TRISD=0x00;		
+CC8E Version 1.3D,   File: pwm_motor.c          5. Nov 2014  18:20   Page 3
+
+ADDR   CODE       LINE  SOURCE
+
+00005A 6A95       00121 	CLRF  TRISD,0
+                  00122 			;	TRISE=0xFF;
+00005C 6896       00123 	SETF  TRISE,0
+                  00124 			;	
+                  00125 			;	PORTC=0x00;		
+00005E 6A82       00126 	CLRF  PORTC,0
+                  00127 			;	PORTD=0x00;
+000060 6A83       00128 	CLRF  PORTD,0
+                  00129 			;	
+                  00130 			;	ADCON0=0b.0100.0001;// Anlog kanal 0 aktif, A/D conversion is not in progress
+000062 0E41       00131 	MOVLW 65
+000064 6EC2       00132 	MOVWF ADCON0,0
+                  00133 			;	ADCON1=0b.0000.0000;
+000066 6AC1       00134 	CLRF  ADCON1,0
+                  00135 			;}
+000068 0012       00136 	RETURN
+                  00137 
+                  00138 	END
+                  00139 
+                  00140 
+                  00141 ; *** KEY INFO ***
+                  00142 
+                  00143 ; 0x000052   12 word(s)  0 % : ayarlar
+                  00144 ; 0x00002A   20 word(s)  0 % : bekle
+                  00145 ; 0x000004   19 word(s)  0 % : main
+                  00146 
+                  00147 ; RAM usage: 3 bytes (3 local), 1533 bytes free
+                  00148 ; Maximum call level: 1
+                  00149 ; Total of 53 code words (0 %)
