@@ -1,0 +1,39 @@
+MPLINK 4.47, Linker
+Linker Map File - Created Tue May 28 21:31:48 2013
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000094
+       .config_2007_332.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000049      
+                            0x002007    0x002007      
+            75 out of 1094 program addresses used, program memory utilization is 6%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    BASLA   0x000004    program     static C:\Users\AKINN\Desktop\akin\332.asm
+                       D1   0x000045    program     static C:\Users\AKINN\Desktop\akin\332.asm
+                       D2   0x000043    program     static C:\Users\AKINN\Desktop\akin\332.asm
+                    DELAY   0x000041    program     static C:\Users\AKINN\Desktop\akin\332.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    BASLA   0x000004    program     static C:\Users\AKINN\Desktop\akin\332.asm
+                    DELAY   0x000041    program     static C:\Users\AKINN\Desktop\akin\332.asm
+                       D2   0x000043    program     static C:\Users\AKINN\Desktop\akin\332.asm
+                       D1   0x000045    program     static C:\Users\AKINN\Desktop\akin\332.asm
+
+

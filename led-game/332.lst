@@ -1,0 +1,369 @@
+MPASM  5.49                           332.ASM   5-28-2013  21:31:46         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (LIST)
+                      00001 LIST P=16F84A
+Warning[205]: Found directive in column 1. (INCLUDE)
+                      00002 INCLUDE P16F84A.INC
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F84A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00208         LIST
+                      00003 
+Warning[205]: Found directive in column 1. (__CONFIG)
+2007   3FF3           00004 __CONFIG _CP_OFF & _WDT_OFF & _PWRTE_ON & _RC_OSC
+                      00005 
+  0000000C            00006 C1 EQU 0x0C
+  0000000D            00007 C2 EQU 0x0D
+                      00008 
+Warning[203]: Found opcode in column 1. (BSF)
+0000   1683           00009 BSF STATUS,5
+Warning[203]: Found opcode in column 1. (CLRF)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0001   0186           00010 CLRF TRISB
+Warning[203]: Found opcode in column 1. (BCF)
+0002   1283           00011 BCF STATUS,5
+Warning[203]: Found opcode in column 1. (CLRF)
+0003   0186           00012 CLRF PORTB
+                      00013 
+0004                  00014 BASLA
+                      00015 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0004   3001           00016 MOVLW B'00000001' ;1
+Warning[203]: Found opcode in column 1. (MOVWF)
+0005   0086           00017 MOVWF PORTB         
+                      00018 
+Warning[203]: Found opcode in column 1. (CALL)
+0006   2041           00019 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+0007   2041           00020 CALL DELAY
+                      00021 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0008   3080           00022 MOVLW B'10000000' ;8
+Warning[203]: Found opcode in column 1. (MOVWF)
+0009   0086           00023 MOVWF PORTB     
+                      00024 
+Warning[203]: Found opcode in column 1. (CALL)
+000A   2041           00025 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+000B   2041           00026 CALL DELAY
+                      00027 
+Warning[203]: Found opcode in column 1. (MOVLW)
+MPASM  5.49                           332.ASM   5-28-2013  21:31:46         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000C   3002           00028 MOVLW B'00000010' ;2
+Warning[203]: Found opcode in column 1. (MOVWF)
+000D   0086           00029 MOVWF PORTB
+                      00030      
+Warning[203]: Found opcode in column 1. (CALL)
+000E   2041           00031 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+000F   2041           00032 CALL DELAY
+                      00033 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0010   3040           00034 MOVLW B'01000000' ;7
+Warning[203]: Found opcode in column 1. (MOVWF)
+0011   0086           00035 MOVWF PORTB     
+                      00036 
+Warning[203]: Found opcode in column 1. (CALL)
+0012   2041           00037 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+0013   2041           00038 CALL DELAY
+                      00039 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0014   3004           00040 MOVLW B'00000100' ;3
+Warning[203]: Found opcode in column 1. (MOVWF)
+0015   0086           00041 MOVWF PORTB     
+                      00042 
+Warning[203]: Found opcode in column 1. (CALL)
+0016   2041           00043 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+0017   2041           00044 CALL DELAY
+                      00045 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0018   3020           00046 MOVLW B'00100000' ;6
+Warning[203]: Found opcode in column 1. (MOVWF)
+0019   0086           00047 MOVWF PORTB     
+                      00048 
+Warning[203]: Found opcode in column 1. (CALL)
+001A   2041           00049 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+001B   2041           00050 CALL DELAY
+                      00051 
+Warning[203]: Found opcode in column 1. (MOVLW)
+001C   3008           00052 MOVLW B'00001000' ;4
+Warning[203]: Found opcode in column 1. (MOVWF)
+001D   0086           00053 MOVWF PORTB     
+                      00054 
+Warning[203]: Found opcode in column 1. (CALL)
+001E   2041           00055 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+001F   2041           00056 CALL DELAY
+                      00057 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0020   3010           00058 MOVLW B'00010000' ;5
+Warning[203]: Found opcode in column 1. (MOVWF)
+0021   0086           00059 MOVWF PORTB     
+MPASM  5.49                           332.ASM   5-28-2013  21:31:46         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00060 
+Warning[203]: Found opcode in column 1. (CALL)
+0022   2041           00061 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+0023   2041           00062 CALL DELAY
+                      00063 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0024   3008           00064 MOVLW B'00001000' ;4
+Warning[203]: Found opcode in column 1. (MOVWF)
+0025   0086           00065 MOVWF PORTB     
+                      00066 
+Warning[203]: Found opcode in column 1. (CALL)
+0026   2041           00067 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+0027   2041           00068 CALL DELAY
+                      00069 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0028   3020           00070 MOVLW B'00100000' ;6
+Warning[203]: Found opcode in column 1. (MOVWF)
+0029   0086           00071 MOVWF PORTB     
+                      00072 
+Warning[203]: Found opcode in column 1. (CALL)
+002A   2041           00073 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+002B   2041           00074 CALL DELAY
+                      00075 
+Warning[203]: Found opcode in column 1. (MOVLW)
+002C   3004           00076 MOVLW B'00000100' ;3
+Warning[203]: Found opcode in column 1. (MOVWF)
+002D   0086           00077 MOVWF PORTB     
+                      00078 
+Warning[203]: Found opcode in column 1. (CALL)
+002E   2041           00079 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+002F   2041           00080 CALL DELAY
+                      00081 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0030   3040           00082 MOVLW B'01000000' ;7
+Warning[203]: Found opcode in column 1. (MOVWF)
+0031   0086           00083 MOVWF PORTB     
+                      00084 
+Warning[203]: Found opcode in column 1. (CALL)
+0032   2041           00085 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+0033   2041           00086 CALL DELAY
+                      00087 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0034   3002           00088 MOVLW B'00000010' ;2
+Warning[203]: Found opcode in column 1. (MOVWF)
+0035   0086           00089 MOVWF PORTB     
+                      00090 
+Warning[203]: Found opcode in column 1. (CALL)
+0036   2041           00091 CALL DELAY
+MPASM  5.49                           332.ASM   5-28-2013  21:31:46         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[203]: Found opcode in column 1. (CALL)
+0037   2041           00092 CALL DELAY
+                      00093 
+Warning[203]: Found opcode in column 1. (MOVLW)
+0038   3080           00094 MOVLW B'10000000' ;8
+Warning[203]: Found opcode in column 1. (MOVWF)
+0039   0086           00095 MOVWF PORTB     
+                      00096 
+Warning[203]: Found opcode in column 1. (CALL)
+003A   2041           00097 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+003B   2041           00098 CALL DELAY
+                      00099 
+Warning[203]: Found opcode in column 1. (MOVLW)
+003C   3001           00100 MOVLW B'00000001' ;1
+Warning[203]: Found opcode in column 1. (MOVWF)
+003D   0086           00101 MOVWF PORTB     
+                      00102 
+Warning[203]: Found opcode in column 1. (CALL)
+003E   2041           00103 CALL DELAY
+Warning[203]: Found opcode in column 1. (CALL)
+003F   2041           00104 CALL DELAY
+                      00105 
+Warning[203]: Found opcode in column 1. (GOTO)
+0040   2804           00106 GOTO BASLA 
+                      00107 
+                      00108 
+0041                  00109 DELAY
+Warning[203]: Found opcode in column 1. (MOVLW)
+0041   30FF           00110 MOVLW .255
+Warning[203]: Found opcode in column 1. (MOVWF)
+0042   008D           00111 MOVWF C2
+0043                  00112 D2
+0043   30FF           00113         MOVLW .255
+0044   008C           00114         MOVWF C1
+Warning[207]: Found label after column 1. (D1)
+0045                  00115  D1 
+0045   0B8C           00116  DECFSZ C1,f
+0046   2845           00117  GOTO D1
+Warning[203]: Found opcode in column 1. (DECFSZ)
+0047   0B8D           00118 DECFSZ C2,f
+Warning[203]: Found opcode in column 1. (GOTO)
+0048   2843           00119 GOTO D2
+Warning[203]: Found opcode in column 1. (RETURN)
+0049   0008           00120 RETURN
+                      00121 
+Warning[205]: Found directive in column 1. (END)
+                      00122 END
+MPASM  5.49                           332.ASM   5-28-2013  21:31:46         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BASLA                             00000004
+C                                 00000000
+C1                                0000000C
+C2                                0000000D
+D1                                00000045
+D2                                00000043
+DC                                00000001
+DELAY                             00000041
+EEADR                             00000009
+EECON1                            00000088
+EECON2                            00000089
+EEDATA                            00000008
+EEIE                              00000006
+EEIF                              00000004
+F                                 00000001
+FSR                               00000004
+GIE                               00000007
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_PD                            00000003
+NOT_RBPU                          00000007
+NOT_TO                            00000004
+OPTION_REG                        00000081
+PCL                               00000002
+PCLATH                            0000000A
+PORTA                             00000005
+PORTB                             00000006
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RD                                00000000
+RP0                               00000005
+RP1                               00000006
+MPASM  5.49                           332.ASM   5-28-2013  21:31:46         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+STATUS                            00000003
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+W                                 00000000
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_CONFIG                           00002007
+_CP_OFF                           00003FFF
+_CP_ON                            0000000F
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_XT_OSC                           00003FFD
+__16F84A                          00000001
+__DEBUG                           1
+MPASM  5.49                           332.ASM   5-28-2013  21:31:46         PAGE  7
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXX------ ---------------- ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    74
+Program Memory Words Free:   950
+
+
+Errors   :     0
+Warnings :    75 reported,     0 suppressed
+Messages :     1 reported,     0 suppressed
+
+

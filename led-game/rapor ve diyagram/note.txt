@@ -1,0 +1,3 @@
+18. LED Işık Oyunu: LED’leri sırasıyla 1 -8-2-7-3-6-4-5-4-6-3-7-2-8-1 şeklinde yakan
+yinelemeli programı yazınız. (LED dizisi: Üst sıra soldan sağa doğru 1 2 3 4, alt sıra sağdan
+sola doğru 5 6 7 8)
