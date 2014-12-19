@@ -1,0 +1,8 @@
+Warning[205] C:\USERS\SüLEYMAN\DESKTOP\PROJE\PROJE.ASM 1 : Found directive in column 1. (LIST)
+Warning[205] C:\USERS\SüLEYMAN\DESKTOP\PROJE\PROJE.ASM 2 : Found directive in column 1. (INCLUDE)
+Warning[205] C:\USERS\SüLEYMAN\DESKTOP\PROJE\PROJE.ASM 4 : Found directive in column 1. (__CONFIG)
+Warning[207] C:\USERS\SüLEYMAN\DESKTOP\PROJE\PROJE.ASM 6 : Found label after column 1. (j)
+Warning[207] C:\USERS\SüLEYMAN\DESKTOP\PROJE\PROJE.ASM 7 : Found label after column 1. (k)
+Message[302] C:\USERS\SüLEYMAN\DESKTOP\PROJE\PROJE.ASM 13 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\SüLEYMAN\DESKTOP\PROJE\PROJE.ASM 69 : Found opcode in column 1. (RETURN)
+Warning[205] C:\USERS\SüLEYMAN\DESKTOP\PROJE\PROJE.ASM 70 : Found directive in column 1. (END)

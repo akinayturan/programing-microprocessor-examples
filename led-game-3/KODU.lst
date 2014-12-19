@@ -1,0 +1,225 @@
+MPASM  5.46                          KODU.ASM   5-25-2013  14:08:17         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001                 LIST P=16F84A
+Warning[205]: Found directive in column 1. (INCLUDE)
+                      00002 INCLUDE "P16F84A.INC"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F84A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2012 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00208         LIST
+Warning[205]: Found directive in column 1. (__CONFIG)
+2007   3FF3           00003 __CONFIG _CP_OFF & _WDT_OFF & _PWRTE_ON & _RC_OSC ; Config ayarlarý yapýldý. RC osilatör yapýldý.
+  0000000D            00004 SAYAC2  EQU H'0D' ; Gecikme için sayaclar tanýmlandý.
+  0000000C            00005 SAYAC   EQU H'0C'
+  0000000B            00006 SAYAC3  EQU H'0B'
+0000                  00007                 ORG 0X00 ;Baþlama adresi
+0000   0186           00008                 CLRF PORTB ; PORTB yi temizledik.
+0001   1683           00009                 BSF STATUS,5 ; STATUS'un beþinci bitini 1 yaparak BANK1'e geçtik.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0002   0186           00010                 CLRF TRISB ; PORTB'yi çýkýþ olarak tanýmladýk.
+0003   1283           00011                 BCF STATUS,5 ;STATUS'un beþinci bitini 0 yaparak BANK0'a geçtik.
+0004                  00012 TEKRAR ; Tekrar birinci ledi yakmasý için döngü tanýmladýk
+0004   3001           00013                 MOVLW H'01' ; Ýlk ledi yaktýk
+0005   0086           00014                 MOVWF PORTB 
+0006                  00015 SAG       ; Birinci ledden 4.lede kayarak gitmesi için döngü kurduk.
+0006   201B           00016                 CALL TIMER ; Gecikme döngüsü çaðýrdýk
+0007   0D86           00017                 RLF PORTB,F ; 1.ledden baþlayarak yaktýðýmýz ledleri 4.lede kadar kaydýran komut.
+0008   1D86           00018                 BTFSS PORTB,3 ; RB3'e geldiðimizi kontrol edip SON döngüsüne gideceðimiz komut.
+0009   2806           00019                 GOTO SAG ; RB3 ledi yanmadýysa SAG döngüsüne git.
+000A   280B           00020                 GOTO SON ; RB3 ledi yandýysa SON döngüsüne git.
+000B                  00021 SON ; Bu döngü tüm ledleri sýfýrlar. Ve 8. ledi yakar.
+000B   201B           00022                 CALL TIMER ; gecikme döngüsü
+000C   3000           00023                 MOVLW B'00000000' ; Ledleri söndürdük.
+000D   0086           00024                 MOVWF PORTB
+000E   201B           00025                 CALL TIMER
+000F   3080           00026                 MOVLW H'80' ; Sola kaymasý için 8. Ledi yaktýk.
+0010   0086           00027                 MOVWF PORTB
+0011   2812           00028                 GOTO SOL
+0012                  00029 SOL
+0012   201B           00030                 CALL TIMER 
+0013   0C86           00031                 RRF PORTB,F ; 8. Ledden 5. lede kaydýran komut.
+0014   1E06           00032                 BTFSS PORTB,4 ; RB4'in yanýp yanmadýðýný kontrol ederiz.
+0015   2812           00033                 GOTO SOL ; RB4 deki led yanmadýysa döngüye devam et.
+0016   201B           00034                 CALL TIMER
+0017   3000           00035                 MOVLW B'00000000' ; RB4 deki led yandýysa ledleri söndür.
+0018   0086           00036                 MOVWF PORTB ; Tekrar döngüsüne git.
+0019   201B           00037                 CALL TIMER
+001A   2804           00038                 GOTO TEKRAR
+001B                  00039 TIMER  ; RC osilatör için gecikme döngüsü
+001B   3037           00040                 MOVLW H'37'
+001C   008C           00041                 MOVWF SAYAC
+MPASM  5.46                          KODU.ASM   5-25-2013  14:08:17         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+001D                  00042 DONGUl
+001D   3037           00043                 MOVLW H'37'
+001E   008D           00044                 MOVWF SAYAC2
+001F                  00045 DONGU2
+001F   3037           00046                 MOVLW H'37'
+0020   008B           00047                 MOVWF SAYAC3
+0021                  00048 DONGU3
+0021   0B8B           00049                 DECFSZ SAYAC3, F
+0022   2821           00050                 GOTO DONGU3
+0023   0B8D           00051                 DECFSZ SAYAC2, F
+0024   281F           00052                 GOTO DONGU2
+0025   0B8C           00053                 DECFSZ SAYAC, F
+0026   281D           00054                 GOTO DONGUl
+0027   0008           00055                 RETURN
+                      00056                 END
+MPASM  5.46                          KODU.ASM   5-25-2013  14:08:17         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+C                                 00000000
+DC                                00000001
+DONGU2                            0000001F
+DONGU3                            00000021
+DONGUl                            0000001D
+EEADR                             00000009
+EECON1                            00000088
+EECON2                            00000089
+EEDATA                            00000008
+EEIE                              00000006
+EEIF                              00000004
+F                                 00000001
+FSR                               00000004
+GIE                               00000007
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_PD                            00000003
+NOT_RBPU                          00000007
+NOT_TO                            00000004
+OPTION_REG                        00000081
+PCL                               00000002
+PCLATH                            0000000A
+PORTA                             00000005
+PORTB                             00000006
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RD                                00000000
+RP0                               00000005
+RP1                               00000006
+SAG                               00000006
+SAYAC                             0000000C
+SAYAC2                            0000000D
+MPASM  5.46                          KODU.ASM   5-25-2013  14:08:17         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SAYAC3                            0000000B
+SOL                               00000012
+SON                               0000000B
+STATUS                            00000003
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+TEKRAR                            00000004
+TIMER                             0000001B
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+W                                 00000000
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_CONFIG                           00002007
+_CP_OFF                           00003FFF
+_CP_ON                            0000000F
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+MPASM  5.46                          KODU.ASM   5-25-2013  14:08:17         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WDT_ON                           00003FFF
+_XT_OSC                           00003FFD
+__16F84A                          00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXX-------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    40
+Program Memory Words Free:   984
+
+
+Errors   :     0
+Warnings :     2 reported,     0 suppressed
+Messages :     1 reported,     0 suppressed
+
+

@@ -1,0 +1,3 @@
+Warning[205] C:\USERS\BERIL\MIKRO PROJE\PRO PIC\KAYAN LAMBA1\KODU.ASM 2 : Found directive in column 1. (INCLUDE)
+Warning[205] C:\USERS\BERIL\MIKRO PROJE\PRO PIC\KAYAN LAMBA1\KODU.ASM 3 : Found directive in column 1. (__CONFIG)
+Message[302] C:\USERS\BERIL\MIKRO PROJE\PRO PIC\KAYAN LAMBA1\KODU.ASM 10 : Register in operand not in bank 0.  Ensure that bank bits are correct.

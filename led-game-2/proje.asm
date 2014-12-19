@@ -1,0 +1,71 @@
+__CONFIG _CP_OFF &_WDT_OFF &_PWRTE_OFF &_XT_OSC
+
+LIST p=16F84A
+INCLUDE "P16F84A.INC"
+ 
+
+  j  EQU 0x0c
+  k  EQU 0x0d
+   
+  ORG    0x00
+
+  BSF STATUS,5
+  MOVLW 0x00
+  MOVWF TRISB
+  BCF STATUS,5
+
+LEDonoff:
+  MOVLW b'00001111' 
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'00000000'
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'00001111' 
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'00000000'
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'00001111' 
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'00000000'
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'11110000'
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'00000000'
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'11110000'
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'00000000'
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'11110000'
+  MOVWF PORTB
+  CALL delay
+  MOVLW b'00000000'
+  MOVWF PORTB
+  CALL delay
+
+  GOTO LEDonoff
+
+delay:
+  MOVLW d'255'
+  MOVWF j
+ 
+jloop:
+  MOVWF k
+
+kloop: 
+  DECFSZ k,f
+  GOTO kloop
+  DECFSZ j,f
+  GOTO jloop
+
+RETURN
+END
