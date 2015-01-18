@@ -1,0 +1,23 @@
+CC8E Version 1.3D, Copyright (c) B Knudsen Data, Norway 2001-2010
+ --> FREE edition, 8-16 bit int, 24 bit float, 128k code words, reduced optim.
+proje.c:
+ 23. Jan 2011  19:59
+Warning[1] C:\eem415\Projeson\proje.c 14 : Duplicate declaration of 'data'
+ (The same identifier is defined earlier (check spelling))
+ Chip = 18F452
+ RAM : ===..*** ******** ******** ******** ******** ******** ******** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: ******** ******** ******** ******** ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** ******** ********
+ Bank  0:251  1:256  2:256  3:256  4:256  5:256  bytes free
+RAM usage: 5 bytes (3 local), 1531 bytes free
+ File 'proje.fcs'
+ Optimizing - removed 54 code words (-24 %)
+ File 'proje.var'
+ File 'proje.asm'
+ File 'proje.lst'
+ File 'proje.cod'
+ File 'proje.occ'
+ File 'proje.hex'
+Total of 217 code words (1 %)
+ * Estimated CODE SIZE of full optimization: 215 code words (-0 %)

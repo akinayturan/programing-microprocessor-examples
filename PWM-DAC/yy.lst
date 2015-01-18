@@ -1,0 +1,185 @@
+CC8E Version 1.4,   File: yy.c                17. Nov 2014   9:32   Page 1
+
+ADDR   CODE       LINE  SOURCE
+
+                  00001 
+                  00002 ; CC8E Version 1.4, Copyright (c) B Knudsen Data
+                  00003 ; C compiler for the PIC18 microcontrollers
+                  00004 ; ************  17. Nov 2014   9:32  *************
+                  00005 
+                  00006 	processor  PIC18F452
+                  00007 	radix  DEC
+                  00008 
+300000 F1FF       00009 	__config 0x300001, 0xF1
+                  00010 
+       0FF2       00011 INTCON      EQU   0xFF2
+       0000       00012 Carry       EQU   0
+       0002       00013 Zero_       EQU   2
+       0FC4       00014 ADRESH      EQU   0xFC4
+       0FC2       00015 ADCON0      EQU   0xFC2
+       0FC1       00016 ADCON1      EQU   0xFC1
+       0F96       00017 TRISE       EQU   0xF96
+       0F95       00018 TRISD       EQU   0xF95
+       0F94       00019 TRISC       EQU   0xF94
+       0F93       00020 TRISB       EQU   0xF93
+       0F92       00021 TRISA       EQU   0xF92
+       0F83       00022 PORTD       EQU   0xF83
+       0F82       00023 PORTC       EQU   0xF82
+       0001       00024 INT0IF      EQU   1
+       0007       00025 GIE         EQU   7
+       0002       00026 GO          EQU   2
+       0000       00027 t           EQU   0x00
+       0002       00028 x           EQU   0x02
+                  00029 
+000000 EF0A F000  00030 	GOTO main
+                  00031 
+                  00032   ; FILE yy.c
+                  00033 			;#pragma config[1] = 0xF1 // Osilatör: XT
+                  00034 			;void ayarlar();
+                  00035 			;void bekle(unsigned long t);	// t milisaniye gecikme saðlayan fonksiyon tanýmý
+                  00036 			;void kesme();	
+                  00037 			;
+                  00038 			;
+                  00039 			;void kesme() //kesme gelince yapilacak komutlar, kesmede calisacak fonksiyon main fonksiyonunun ustundeyazilir...	
+                  00040 			;{
+                  00041 kesme
+                  00042 			;	INTCON=0x90; // kesmeler acilir RBO/INT0 girisiinterruptenable edilir. 
+000004 0E90       00043 	MOVLW 144
+000006 6EF2       00044 	MOVWF INTCON,0
+                  00045 			;	GO=1;	// adc cevrimi baslar
+000008 84C2       00046 	BSF   0xFC2,GO,0
+                  00047 			;	while(GO);	//cevirme bitene kadar calisir, cevirme bitince go=0 olur
+00000A B4C2       00048 m001	BTFSC 0xFC2,GO,0
+00000C D7FE       00049 	BRA   m001
+                  00050 			;	INT0IF=0;  // yeni kesmeler gelmesi icin butona bagli olan INT0 portundaki interruptflagikapatilir.
+00000E 92F2       00051 	BCF   0xFF2,INT0IF,0
+                  00052 			;	GIE=1;	//kesmeler acilir, yeni kesme gelmesine musade edilir
+000010 8EF2       00053 	BSF   0xFF2,GIE,0
+                  00054 			;}	
+000012 0012       00055 	RETURN
+                  00056 			;
+                  00057 			;
+                  00058 			;void main()
+                  00059 			;{
+                  00060 main
+CC8E Version 1.4,   File: yy.c                17. Nov 2014   9:32   Page 2
+
+ADDR   CODE       LINE  SOURCE
+
+                  00061 			;	
+                  00062 			;	ayarlar();
+000014 D825       00063 	RCALL ayarlar
+                  00064 			;
+                  00065 			;//-----------------------------------------------	
+                  00066 			;anadongu:
+                  00067 			;
+                  00068 			;	bekle(1);	// Acquisition Time(Sample&Holdkapasitörünün þarj olmasý için gerekli zaman)
+000016 0E01       00069 m002	MOVLW 1
+000018 6E00       00070 	MOVWF t,0
+00001A 6A01       00071 	CLRF  t+1,0
+00001C D80D       00072 	RCALL bekle
+                  00073 			;	INTCON=0x90; 
+00001E 0E90       00074 	MOVLW 144
+000020 6EF2       00075 	MOVWF INTCON,0
+                  00076 			;	
+                  00077 			;    PORTC.0=1;
+000022 8082       00078 	BSF   PORTC,0,0
+                  00079 			;bekle(ADRESH);
+000024 CFC4 F000  00080 	MOVFF ADRESH,t
+000028 6A01       00081 	CLRF  t+1,0
+00002A D806       00082 	RCALL bekle
+                  00083 			;    PORTC.0=0;
+00002C 9082       00084 	BCF   PORTC,0,0
+                  00085 			;bekle(0xFF-ADRESH);
+00002E 1CC4       00086 	COMF  ADRESH,W,0
+000030 6E00       00087 	MOVWF t,0
+000032 6A01       00088 	CLRF  t+1,0
+000034 D801       00089 	RCALL bekle
+                  00090 			;
+                  00091 			;
+                  00092 			;
+                  00093 			;goto anadongu;
+000036 D7EF       00094 	BRA   m002
+                  00095 			;//-----------------------------------------------	
+                  00096 			;}
+                  00097 			;
+                  00098 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00099 			;
+                  00100 			;void bekle(unsigned long t)	//t milisaniye gecikme saðlar
+                  00101 			;{
+                  00102 bekle
+                  00103 			;	unsigned x;
+                  00104 			;	t=t/2;
+000038 90D8       00105 	BCF   0xFD8,Carry,0
+00003A 3201       00106 	RRCF  t+1,1,0
+00003C 3200       00107 	RRCF  t,1,0
+                  00108 			;	for(;t>0;t--)
+00003E 5000       00109 m003	MOVF  t,W,0
+000040 1001       00110 	IORWF t+1,W,0
+000042 B4D8       00111 	BTFSC 0xFD8,Zero_,0
+000044 D00C       00112 	BRA   m006
+                  00113 			;		for(x=140;x>0;x--)
+000046 0E8C       00114 	MOVLW 140
+000048 6E02       00115 	MOVWF x,0
+00004A 5202       00116 m004	MOVF  x,1,0
+00004C B4D8       00117 	BTFSC 0xFD8,Zero_,0
+00004E D003       00118 	BRA   m005
+                  00119 			;			nop();
+000050 0000       00120 	NOP  
+CC8E Version 1.4,   File: yy.c                17. Nov 2014   9:32   Page 3
+
+ADDR   CODE       LINE  SOURCE
+
+000052 0602       00121 	DECF  x,1,0
+000054 D7FA       00122 	BRA   m004
+000056 0600       00123 m005	DECF  t,1,0
+000058 0E00       00124 	MOVLW 0
+00005A 5A01       00125 	SUBWFB t+1,1,0
+00005C D7F0       00126 	BRA   m003
+                  00127 			;}
+00005E 0012       00128 m006	RETURN
+                  00129 			;
+                  00130 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00131 			;
+                  00132 			;void ayarlar()	// Bütün baþlangýç ayarlarýnýn tamamlandýðý kýsým
+                  00133 			;{	
+                  00134 ayarlar
+                  00135 			;	GIE=1;			// Bütün kesmeleri ac
+000060 8EF2       00136 	BSF   0xFF2,GIE,0
+                  00137 			;	TRISA=0xFF;
+000062 6892       00138 	SETF  TRISA,0
+                  00139 			;	TRISB=0xFF;
+000064 6893       00140 	SETF  TRISB,0
+                  00141 			;	TRISC=0x00;	
+000066 6A94       00142 	CLRF  TRISC,0
+                  00143 			;	TRISD=0x00;		
+000068 6A95       00144 	CLRF  TRISD,0
+                  00145 			;	TRISE=0xFF;
+00006A 6896       00146 	SETF  TRISE,0
+                  00147 			;	
+                  00148 			;	PORTC=0x00;		
+00006C 6A82       00149 	CLRF  PORTC,0
+                  00150 			;	PORTD=0x00;
+00006E 6A83       00151 	CLRF  PORTD,0
+                  00152 			;	
+                  00153 			;	ADCON0=0b.0100.0001;// Anlog kanal 0 aktif, A/D conversion is not in progress
+000070 0E41       00154 	MOVLW 65
+000072 6EC2       00155 	MOVWF ADCON0,0
+                  00156 			;	ADCON1=0b.0000.0000;
+000074 6AC1       00157 	CLRF  ADCON1,0
+                  00158 			;}
+000076 0012       00159 	RETURN
+                  00160 
+                  00161 	END
+                  00162 
+                  00163 
+                  00164 ; *** KEY INFO ***
+                  00165 
+                  00166 ; 0x000060   12 word(s)  0 % : ayarlar
+                  00167 ; 0x000038   20 word(s)  0 % : bekle
+                  00168 ; 0x000004    8 word(s)  0 % : kesme
+                  00169 ; 0x000014   18 word(s)  0 % : main
+                  00170 
+                  00171 ; RAM usage: 3 bytes (3 local), 1533 bytes free
+                  00172 ; Maximum call level: 1
+                  00173 ; Total of 60 code words (0 %)

@@ -1,0 +1,65 @@
+
+CC8E Version 1.3D, Copyright (c) B Knudsen Data.
+* FUNCTION CALL STRUCTURE
+
+F: main                   :#0 
+    ayarlar               : #1 
+    bekle                 : #21
+    keypad_oku            : #1 
+    i2cgonder             : #1 
+
+F: ayarlar                :#1 
+
+F: i2cgonder              :#1 
+
+F: keypad_oku             :#1 
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+    bekle                 : #21
+
+F: bekle                  :#21
+
+
+ L0  main
+ L1    ayarlar
+ L1    bekle
+ L1    keypad_oku
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L2      bekle
+ L1    i2cgonder
+
