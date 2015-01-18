@@ -1,0 +1,46 @@
+
+ROM used: 314 (1%)
+          314 (1%) including unused fragments
+
+          1 Average locations per line
+          4 Average locations per statement
+
+RAM used: 6 (0%) at main() level
+          7 (0%) worst case
+
+Stack used: 1 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   57    19  23  rs232.c
+  332     0   0  ..\..\..\..\..\PROGRA~2\PICC\devices\18F452.h
+  180    63  77  ..\..\..\..\..\PROGRA~2\PICC\drivers\lcd.c
+----- -----
+  569    82 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     40   6   1             @delay_ms1
+0    168  27   1   409  3.7  MAIN
+0     58   9   0             @const93
+0     44   7   0             @const94
+
+Program metrics:
+    Functions               1
+    Statements              82
+    Comments                137
+    Volume (V)              417
+    Difficilty (D)          3.4
+    Effort to implement (E) 1410
+    Time to implement (T)   1 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   1
+    Maintainability (MI)    35
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-07FFE   310  32454  
+
+
+

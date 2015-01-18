@@ -1,0 +1,11 @@
+Warning[205] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 1 : Found directive in column 1. (LIST)
+Warning[205] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 2 : Found directive in column 1. (INCLUDE)
+Warning[205] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 4 : Found directive in column 1. (__CONFIG)
+Warning[203] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 6 : Found opcode in column 1. (BSF)
+Warning[203] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 7 : Found opcode in column 1. (CLRF)
+Message[302] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 7 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 8 : Found opcode in column 1. (CLRF)
+Message[302] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 8 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 9 : Found opcode in column 1. (BCF)
+Warning[203] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 10 : Found opcode in column 1. (CLRF)
+Warning[205] C:\USERS\AKINN\DESKTOP\ERAY2\A\A.ASM 42 : Found directive in column 1. (END)

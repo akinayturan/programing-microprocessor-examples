@@ -1,0 +1,57 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @SCRATCH
+006     MAIN.@SCRATCH1
+007     @delay_ms1.P1
+F83     lcd
+F83     PSP_DATA
+FBB     CCP_2_LOW
+FBB-FBC CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE-FBF CCP_1
+FBF     CCP_1_HIGH
+FE9-FEA @READ_PROGRAM_MEMORY.P1
+FE9-FEA @WRITE_PROGRAM_MEMORY.P2
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P1
+FF6-FF8 @READ_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+006A  @delay_ms1
+0092  MAIN
+0004  @const93
+003E  @const94
+0092  @cinit
+
+Project Directory:
+    C:\Users\EREN\Desktop\Elektronik Projeler\rs232\
+
+Project Files:
+    rs232.c
+    ..\..\..\..\..\PROGRA~2\PICC\devices\18F452.h
+    ..\..\..\..\..\PROGRA~2\PICC\drivers\lcd.c
+
+Units:
+    C:\Users\EREN\Desktop\Elektronik Projeler\rs232\rs232.c (main)
+
+Compiler Settings:
+    Processor:      PIC18F452
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      rs232.err
+    Ext Symbols: rs232.esym
+    INHX32:      rs232.hex
+    Symbols:     rs232.sym
+    List:        rs232.lst
+    Debug/COFF:  rs232.cof
+    Project:     rs232.PJT
+    Call Tree:   rs232.tre
+    Statistics:  rs232.sta

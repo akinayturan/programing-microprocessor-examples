@@ -1,0 +1,41 @@
+[PROJECT]
+Target=rs232.HEX
+Development_Mode=2
+Processor=0x452F
+ToolSuite=CCS
+Processor_Text=PIC18F452
+
+[Directories]
+Include=
+Library=
+LinkerScript=
+
+[Target Data]
+FileList=C:\Documents and Settings\dell\Belgelerim\pic\rs232\rs232.c
+BuildTool=C-COMPILER
+OptionString=+FM
+AdditionalOptionString=
+BuildRequired=1
+
+[rs232.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+
+[mru-list]
+1=rs232.c
+
+[Windows]
+0=0000 rs232.c 0 0 796 451 3 0
+
+[Units]
+Count=1
+1=rs232.c (main)
+Link=0
+[Opened Files]
+1=C:\Users\EREN\Desktop\Elektronik Projeler\rs232\rs232.c
+2=
+3=
