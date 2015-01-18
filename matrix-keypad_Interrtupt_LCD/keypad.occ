@@ -1,0 +1,30 @@
+CC8E Version 1.3E, Copyright (c) B Knudsen Data, Norway 2001-2012
+ --> FREE edition, 8-16 bit int, 24 bit float, 128k code words, reduced optim.
+berna.c:
+ 13. Jan 2013  20:41
+ Chip = 18F452
+Warning[1] C:\Users\B\Desktop\berna_micro_proje\berna.c 200 : Shared call tree function 'MesajYaz' may contain local variables or parameters
+Warning[2] C:\Users\B\Desktop\berna_micro_proje\berna.c 200 : Shared call tree function 'bekle' may contain local variables or parameters
+Warning[3] C:\Users\B\Desktop\berna_micro_proje\berna.c 200 : Shared call tree function 'LcdKomut' may contain local variables or parameters
+ RAM : ======== =======* ******** ******** ******** ******** ******** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: ******** ******** ******** ******** ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** ******** ********
+ Bank  0:241  1:256  2:256  3:256  4:256  5:256  bytes free
+RAM usage: 15 bytes (15 local), 1521 bytes free
+ File 'berna.fcs'
+ Optimizing - removed 75 code words (-22 %)
+ File 'berna.var'
+ File 'berna.asm'
+ File 'berna.lst'
+ File 'berna.cod'
+ File 'berna.occ'
+Warning[4] C:\Users\B\Desktop\berna_micro_proje\berna.c 161 : Read-modify-write sequence on the same PORT may fail
+ (Two consecutive instructions modifying the same PORT may fail depending on
+ execution speed and load (fall/rise times) on the port pins. Option -wf will
+ remove this warning)
+Warning[5] C:\Users\B\Desktop\berna_micro_proje\berna.c 170 : Read-modify-write sequence on the same PORT may fail
+Warning[6] C:\Users\B\Desktop\berna_micro_proje\berna.c 178 : Read-modify-write sequence on the same PORT may fail
+ File 'berna.hex'
+Total of 302 code words (1 %)
+ * Estimated CODE SIZE of full optimization: 287 code words (-4 %)

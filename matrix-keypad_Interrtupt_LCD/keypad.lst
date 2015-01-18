@@ -1,0 +1,616 @@
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 1
+
+ADDR   CODE       LINE  SOURCE
+
+                  00001 
+                  00002 ; CC8E Version 1.3E, Copyright (c) B Knudsen Data
+                  00003 ; C compiler for the PIC18 microcontrollers
+                  00004 ; ************  13. Jan 2013  20:41  *************
+                  00005 
+                  00006 	processor  PIC18F452
+                  00007 	radix  DEC
+                  00008 
+300000 F1FF       00009 	__config 0x300001, 0xF1
+                  00010 	__config 0x300002, 0xF8
+300002 FEF8       00011 	__config 0x300003, 0xFE
+                  00012 
+       0FF6       00013 TBLPTR      EQU   0xFF6
+       0FF5       00014 TABLAT      EQU   0xFF5
+       0FF3       00015 PRODL       EQU   0xFF3
+       0000       00016 Carry       EQU   0
+       0002       00017 Zero_       EQU   2
+       0F96       00018 TRISE       EQU   0xF96
+       0F95       00019 TRISD       EQU   0xF95
+       0F93       00020 TRISB       EQU   0xF93
+       0F83       00021 PORTD       EQU   0xF83
+       0F82       00022 PORTC       EQU   0xF82
+       0F81       00023 PORTB       EQU   0xF81
+       0001       00024 INT0IF      EQU   1
+       0004       00025 INT0IE      EQU   4
+       0007       00026 GIE         EQU   7
+       0006       00027 INTEDG0     EQU   6
+       0000       00028 e           EQU   0
+       0001       00029 rs          EQU   1
+       0002       00030 rw          EQU   2
+       0F83       00031 disp        EQU   0xF83
+       000C       00032 t           EQU   0x0C
+       000E       00033 x           EQU   0x0E
+       0001       00034 index       EQU   0x01
+       0002       00035 b           EQU   0x02
+       000B       00036 kom         EQU   0x0B
+       000B       00037 c           EQU   0x0B
+       0006       00038 msj         EQU   0x06
+       0007       00039 adr         EQU   0x07
+       0008       00040 i           EQU   0x08
+       0009       00041 j           EQU   0x09
+       000A       00042 k           EQU   0x0A
+       000B       00043 ci          EQU   0x0B
+                  00044 
+000000 EF09 F000  00045 	GOTO main
+                  00046 
+                  00047   ; FILE berna.c
+                  00048 			;#pragma config[1] = 0xF1 // Osilatör: XT
+                  00049 			;#pragma config[2] = 0xFE & 0xF9 // PWRT açýk, BOR kapalý
+                  00050 			;#pragma config[3] = 0xFE // Watchdog Timer kapalý
+                  00051 			;#pragma origin 0x8    //Aþaðýdaki kesme fonksiyonunun hangi program satýrýndan baþlayacaðý ayarlandý
+       0000       00052 	ORG 0x0008
+                  00053 			;       					//(0x8 adresi yüksek öncelikli kesme baþlangýç adresidir)
+                  00054 			;
+                  00055 			;#pragma interruptSaveCheck n
+                  00056 			;#pragma sharedAllocation
+                  00057 			;
+                  00058 			;void ayarlar();
+                  00059 			;void bekle(unsigned long t);	// t milisaniye gecikme saðlayan fonksiyon tanýmý
+                  00060 			;void oku_yaz();
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 2
+
+ADDR   CODE       LINE  SOURCE
+
+                  00061 			;void LcdInit();
+                  00062 			;void LcdYaz(char);
+                  00063 			;void LcdKomut(unsigned kom);
+                  00064 			;void MesajYaz(const char *msj,unsigned adr);
+                  00065 			;
+                  00066 			;bit e @ PORTE.0, rs @ PORTE.1, rw @ PORTE.2;
+                  00067 			;unsigned disp @ PORTD;
+                  00068 			;
+                  00069 			;
+                  00070 			;interrupt int_server(void)  // KESME SUNUCU FONKSÝYONU
+                  00071 			;{   
+                  00072 int_server
+                  00073 			;	if(INT0IF)				//Gelen kesme, INT0 kesmesi mi?
+000008 A2F2       00074 	BTFSS 0xFF2,INT0IF,0
+00000A D002       00075 	BRA   m001
+                  00076 			;	{
+                  00077 			;		oku_yaz();
+00000C D82E       00078 	RCALL oku_yaz
+                  00079 			;		INT0IF = 0;
+00000E 92F2       00080 	BCF   0xFF2,INT0IF,0
+                  00081 			;	}
+                  00082 			;}
+000010 0010       00083 m001	RETFIE
+                  00084 			;
+                  00085 			;
+                  00086 			;void main()
+                  00087 			;{
+                  00088 main
+                  00089 			;	ayarlar(); // Ýlgili Port ve INT tanýmlamalarýnýn yapýlmdýðý fonksiyon
+000012 D812       00090 	RCALL ayarlar
+                  00091 			;	LcdInit(); // LCD' nin kullanýmý için gerekli ayarlamalar.
+000014 D8CF       00092 	RCALL LcdInit
+                  00093 			;	
+                  00094 			;	MesajYaz("Tusa basiniz",0x80); //0x80 Cursorýn baslangýc konumunu belirliyor
+000016 6A06       00095 	CLRF  msj,0
+000018 0E80       00096 	MOVLW 128
+00001A D8D7       00097 	RCALL MesajYaz
+                  00098 			;	bekle(800);
+00001C 0E20       00099 	MOVLW 32
+00001E 6E0C       00100 	MOVWF t,0
+000020 0E03       00101 	MOVLW 3
+000022 6E0D       00102 	MOVWF t+1,0
+000024 D811       00103 	RCALL bekle
+                  00104 			;//-----------------------------------------------	
+                  00105 			;anadongu:
+                  00106 			;	
+                  00107 			;	
+                  00108 			; 	bekle(1);	// Acquisition Time(Sample & Hold kapasitörünün þarj olmasý için gerekli zaman)
+000026 0E01       00109 m002	MOVLW 1
+000028 6E0C       00110 	MOVWF t,0
+00002A 6A0D       00111 	CLRF  t+1,0
+00002C D80D       00112 	RCALL bekle
+                  00113 			; 	MesajYaz("Basilan Tus : ",0x80);
+00002E 0E0D       00114 	MOVLW 13
+000030 6E06       00115 	MOVWF msj,0
+000032 0E80       00116 	MOVLW 128
+000034 D8CA       00117 	RCALL MesajYaz
+                  00118 			;	goto anadongu;
+000036 D7F7       00119 	BRA   m002
+                  00120 			;//-----------------------------------------------	
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 3
+
+ADDR   CODE       LINE  SOURCE
+
+                  00121 			;}
+                  00122 			;
+                  00123 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00124 			;
+                  00125 			;void ayarlar()	// Bütün baþlangýç ayarlarýnýn tamamlandýðý kýsým
+                  00126 			;{	
+                  00127 ayarlar
+                  00128 			;
+                  00129 			;	INT0IE = 1;		// INT0 kesmesi açýk
+000038 88F2       00130 	BSF   0xFF2,INT0IE,0
+                  00131 			;	INTEDG0 = 0;	// INT0 kesmesi düþen kenarda aktif olacak
+00003A 9CF1       00132 	BCF   0xFF1,INTEDG0,0
+                  00133 			;	GIE = 1;		// Bütün kesmeler kullanýlabilir
+00003C 8EF2       00134 	BSF   0xFF2,GIE,0
+                  00135 			;
+                  00136 			;	TRISB = 0xFF;	// PORTB giriþ yapýldý ( Matrix Klavye )
+00003E 6893       00137 	SETF  TRISB,0
+                  00138 			;	TRISD = 0X00;	// PORTD çýkýþ yapýldý ( LCD )
+000040 6A95       00139 	CLRF  TRISD,0
+                  00140 			;	TRISE = 0X00;	// PORTE çýkýþ yapýldý ( LCD )
+000042 6A96       00141 	CLRF  TRISE,0
+                  00142 			;	
+                  00143 			;		
+                  00144 			;	PORTD = 0;	
+000044 6A83       00145 	CLRF  PORTD,0
+                  00146 			;	
+                  00147 			;}
+000046 0012       00148 	RETURN
+                  00149 			;
+                  00150 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00151 			;
+                  00152 			;void bekle(unsigned long t)	//t milisaniye gecikme saðlar
+                  00153 			;{
+                  00154 bekle
+                  00155 			;	unsigned x;
+                  00156 			;	
+                  00157 			;	for(;t>0;t--)
+000048 500C       00158 m003	MOVF  t,W,0
+00004A 100D       00159 	IORWF t+1,W,0
+00004C B4D8       00160 	BTFSC 0xFD8,Zero_,0
+00004E D00C       00161 	BRA   m006
+                  00162 			;		for(x=140;x>0;x--)
+000050 0E8C       00163 	MOVLW 140
+000052 6E0E       00164 	MOVWF x,0
+000054 520E       00165 m004	MOVF  x,1,0
+000056 B4D8       00166 	BTFSC 0xFD8,Zero_,0
+000058 D003       00167 	BRA   m005
+                  00168 			;			nop();
+00005A 0000       00169 	NOP  
+00005C 060E       00170 	DECF  x,1,0
+00005E D7FA       00171 	BRA   m004
+000060 060C       00172 m005	DECF  t,1,0
+000062 0E00       00173 	MOVLW 0
+000064 5A0D       00174 	SUBWFB t+1,1,0
+000066 D7F0       00175 	BRA   m003
+                  00176 			;}
+000068 0012       00177 m006	RETURN
+                  00178 			;
+                  00179 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00180 			;
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 4
+
+ADDR   CODE       LINE  SOURCE
+
+                  00181 			;void oku_yaz()
+                  00182 			;{
+                  00183 oku_yaz
+                  00184 			;	unsigned x;
+                  00185 			;	int index;
+                  00186 			;	int b[4];
+                  00187 			;	static const v[8] = {0x01,0x02,0x03,0x00,0x04,0x05,0x06,0x00}; //Girilen deðer 6'dan küçükse kullanýlan bu diziyi kullan
+                  00188 			;	static const n[8] = {0x07,0x08,0x09,0x00,0x0F,0x00,0x0F,0x00}; //Girilen deðer 6'dan büyükse kullanýlan bu diziyi kullan
+                  00189 			;	
+                  00190 			;	//Matrix klavyeden girilen deðeri bulmak için, b dizisini kullan
+                  00191 			;	b[0] = PORTB.4;
+00006A 6A02       00192 	CLRF  b,0
+00006C B881       00193 	BTFSC PORTB,4,0
+00006E 2A02       00194 	INCF  b,1,0
+                  00195 			;	b[1] = PORTB.5;
+000070 6A03       00196 	CLRF  b+1,0
+000072 BA81       00197 	BTFSC PORTB,5,0
+000074 2A03       00198 	INCF  b+1,1,0
+                  00199 			;	b[2] = PORTB.6;
+000076 6A04       00200 	CLRF  b+2,0
+000078 BC81       00201 	BTFSC PORTB,6,0
+00007A 2A04       00202 	INCF  b+2,1,0
+                  00203 			;	b[3] = PORTB.7;
+00007C 6A05       00204 	CLRF  b+3,0
+00007E BE81       00205 	BTFSC PORTB,7,0
+000080 2A05       00206 	INCF  b+3,1,0
+                  00207 			;
+                  00208 			;	//Girilen sayýnýn decimal karþýlýðý
+                  00209 			;	index = b[0] + (b[1]*2);
+000082 90D8       00210 	BCF   0xFD8,Carry,0
+000084 3403       00211 	RLCF  b+1,W,0
+000086 2402       00212 	ADDWF b,W,0
+000088 6E01       00213 	MOVWF index,0
+                  00214 			;	index += (b[2]*4); 
+00008A 0E04       00215 	MOVLW 4
+00008C 0204       00216 	MULWF b+2,0
+00008E 50F3       00217 	MOVF  PRODL,W,0
+000090 2601       00218 	ADDWF index,1,0
+                  00219 			;	index += (b[3]*8);
+000092 0E08       00220 	MOVLW 8
+000094 0205       00221 	MULWF b+3,0
+000096 50F3       00222 	MOVF  PRODL,W,0
+000098 2601       00223 	ADDWF index,1,0
+                  00224 			;	
+                  00225 			;	if( index>6 ) //Girilen sayýnýn 6 dan büyük olmasý
+00009A BE01       00226 	BTFSC index,7,0
+00009C D03D       00227 	BRA   m014
+00009E 0E06       00228 	MOVLW 6
+0000A0 6401       00229 	CPFSGT index,0
+0000A2 D03A       00230 	BRA   m014
+                  00231 			;	{
+                  00232 			;		
+                  00233 			;		PORTC = n[index-8];
+0000A4 0E1C       00234 	MOVLW 28
+0000A6 2401       00235 	ADDWF index,W,0
+0000A8 D8AE       00236 	RCALL _const1
+0000AA 6E82       00237 	MOVWF PORTC,0
+                  00238 			;		if ( index == 12 || index == 14 ) //Basýlan tuþun "*" veya "#" olmasý
+0000AC 5001       00239 	MOVF  index,W,0
+0000AE 0A0C       00240 	XORLW 12
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 5
+
+ADDR   CODE       LINE  SOURCE
+
+0000B0 B4D8       00241 	BTFSC 0xFD8,Zero_,0
+0000B2 D003       00242 	BRA   m007
+0000B4 0E0E       00243 	MOVLW 14
+0000B6 6201       00244 	CPFSEQ index,0
+0000B8 D00D       00245 	BRA   m009
+                  00246 			;		{
+                  00247 			;			if ( index == 12 )
+0000BA 0E0C       00248 m007	MOVLW 12
+0000BC 6201       00249 	CPFSEQ index,0
+0000BE D005       00250 	BRA   m008
+                  00251 			;				MesajYaz("*",0x8E);
+0000C0 0E2C       00252 	MOVLW 44
+0000C2 6E06       00253 	MOVWF msj,0
+0000C4 0E8E       00254 	MOVLW 142
+0000C6 D881       00255 	RCALL MesajYaz
+                  00256 			;			else
+0000C8 D05B       00257 	BRA   m021
+                  00258 			;				MesajYaz("#",0x8E);
+0000CA 0E2E       00259 m008	MOVLW 46
+0000CC 6E06       00260 	MOVWF msj,0
+0000CE 0E8E       00261 	MOVLW 142
+0000D0 D87C       00262 	RCALL MesajYaz
+                  00263 			;		}
+                  00264 			;		else //Basýlan tuþun 7,8,9,0 olmasý durumu
+0000D2 D056       00265 	BRA   m021
+                  00266 			;		{
+                  00267 			;			switch (index)
+0000D4 5001       00268 m009	MOVF  index,W,0
+0000D6 0A08       00269 	XORLW 8
+0000D8 B4D8       00270 	BTFSC 0xFD8,Zero_,0
+0000DA D00A       00271 	BRA   m010
+0000DC 0A01       00272 	XORLW 1
+0000DE B4D8       00273 	BTFSC 0xFD8,Zero_,0
+0000E0 D00C       00274 	BRA   m011
+0000E2 0A03       00275 	XORLW 3
+0000E4 B4D8       00276 	BTFSC 0xFD8,Zero_,0
+0000E6 D00E       00277 	BRA   m012
+0000E8 0A07       00278 	XORLW 7
+0000EA B4D8       00279 	BTFSC 0xFD8,Zero_,0
+0000EC D010       00280 	BRA   m013
+0000EE D048       00281 	BRA   m021
+                  00282 			;			{
+                  00283 			;				case 8:
+                  00284 			;					MesajYaz("7",0x8E);
+0000F0 0E30       00285 m010	MOVLW 48
+0000F2 6E06       00286 	MOVWF msj,0
+0000F4 0E8E       00287 	MOVLW 142
+0000F6 D869       00288 	RCALL MesajYaz
+                  00289 			;					break;
+0000F8 D043       00290 	BRA   m021
+                  00291 			;				case 9:
+                  00292 			;					MesajYaz("8",0x8E);
+0000FA 0E32       00293 m011	MOVLW 50
+0000FC 6E06       00294 	MOVWF msj,0
+0000FE 0E8E       00295 	MOVLW 142
+000100 D864       00296 	RCALL MesajYaz
+                  00297 			;					break;
+000102 D03E       00298 	BRA   m021
+                  00299 			;				case 10:
+                  00300 			;					MesajYaz("9",0x8E);
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 6
+
+ADDR   CODE       LINE  SOURCE
+
+000104 0E34       00301 m012	MOVLW 52
+000106 6E06       00302 	MOVWF msj,0
+000108 0E8E       00303 	MOVLW 142
+00010A D85F       00304 	RCALL MesajYaz
+                  00305 			;					break;
+00010C D039       00306 	BRA   m021
+                  00307 			;				case 13:
+                  00308 			;					MesajYaz("0",0x8E);
+00010E 0E36       00309 m013	MOVLW 54
+000110 6E06       00310 	MOVWF msj,0
+000112 0E8E       00311 	MOVLW 142
+000114 D85A       00312 	RCALL MesajYaz
+                  00313 			;					break;
+000116 D034       00314 	BRA   m021
+                  00315 			;			}
+                  00316 			;		}
+                  00317 			;	}
+                  00318 			;	else //Girilen sayýnýn 6 veya 6'dan küçük olmasý
+                  00319 			;	{
+                  00320 			;		PORTC = v[index];
+000118 0E1C       00321 m014	MOVLW 28
+00011A 2401       00322 	ADDWF index,W,0
+00011C D874       00323 	RCALL _const1
+00011E 6E82       00324 	MOVWF PORTC,0
+                  00325 			;		switch(index) //Basýlan tuþun 1,2,3,4,5,6 olmasý durumu
+000120 5001       00326 	MOVF  index,W,0
+000122 B4D8       00327 	BTFSC 0xFD8,Zero_,0
+000124 D010       00328 	BRA   m015
+000126 0A01       00329 	XORLW 1
+000128 B4D8       00330 	BTFSC 0xFD8,Zero_,0
+00012A D012       00331 	BRA   m016
+00012C 0A03       00332 	XORLW 3
+00012E B4D8       00333 	BTFSC 0xFD8,Zero_,0
+000130 D014       00334 	BRA   m017
+000132 0A06       00335 	XORLW 6
+000134 B4D8       00336 	BTFSC 0xFD8,Zero_,0
+000136 D016       00337 	BRA   m018
+000138 0A01       00338 	XORLW 1
+00013A B4D8       00339 	BTFSC 0xFD8,Zero_,0
+00013C D018       00340 	BRA   m019
+00013E 0A03       00341 	XORLW 3
+000140 B4D8       00342 	BTFSC 0xFD8,Zero_,0
+000142 D01A       00343 	BRA   m020
+000144 D01D       00344 	BRA   m021
+                  00345 			;		{
+                  00346 			;			case 0:
+                  00347 			;					MesajYaz("1",0x8E);
+000146 0E38       00348 m015	MOVLW 56
+000148 6E06       00349 	MOVWF msj,0
+00014A 0E8E       00350 	MOVLW 142
+00014C D83E       00351 	RCALL MesajYaz
+                  00352 			;					break;
+00014E D018       00353 	BRA   m021
+                  00354 			;			case 1:
+                  00355 			;					MesajYaz("2",0x8E);
+000150 0E3A       00356 m016	MOVLW 58
+000152 6E06       00357 	MOVWF msj,0
+000154 0E8E       00358 	MOVLW 142
+000156 D839       00359 	RCALL MesajYaz
+                  00360 			;					break;
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 7
+
+ADDR   CODE       LINE  SOURCE
+
+000158 D013       00361 	BRA   m021
+                  00362 			;			case 2:
+                  00363 			;					MesajYaz("3",0x8E);
+00015A 0E3C       00364 m017	MOVLW 60
+00015C 6E06       00365 	MOVWF msj,0
+00015E 0E8E       00366 	MOVLW 142
+000160 D834       00367 	RCALL MesajYaz
+                  00368 			;					break;
+000162 D00E       00369 	BRA   m021
+                  00370 			;			case 4:
+                  00371 			;					MesajYaz("4",0x8E);
+000164 0E3E       00372 m018	MOVLW 62
+000166 6E06       00373 	MOVWF msj,0
+000168 0E8E       00374 	MOVLW 142
+00016A D82F       00375 	RCALL MesajYaz
+                  00376 			;					break;
+00016C D009       00377 	BRA   m021
+                  00378 			;			case 5:
+                  00379 			;					MesajYaz("5",0x8E);
+00016E 0E40       00380 m019	MOVLW 64
+000170 6E06       00381 	MOVWF msj,0
+000172 0E8E       00382 	MOVLW 142
+000174 D82A       00383 	RCALL MesajYaz
+                  00384 			;					break;
+000176 D004       00385 	BRA   m021
+                  00386 			;			case 6:
+                  00387 			;					MesajYaz("6",0x8E);
+000178 0E42       00388 m020	MOVLW 66
+00017A 6E06       00389 	MOVWF msj,0
+00017C 0E8E       00390 	MOVLW 142
+00017E D825       00391 	RCALL MesajYaz
+                  00392 			;					break;
+                  00393 			;		}
+                  00394 			;	}	
+                  00395 			;}
+000180 0012       00396 m021	RETURN
+                  00397 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00398 			;void LcdKomut(unsigned kom) // Gelen mesajýn iþlem komutuna göre, ilgili komutu gerçekleþtiren fonksiyon 
+                  00399 			;{							// MesajYaz("....",0x80); satýrýndaki 0x80' i iþleme koyan fonksiyon
+                  00400 LcdKomut
+000182 6E0B       00401 	MOVWF kom,0
+                  00402 			;	bekle(20);
+000184 0E14       00403 	MOVLW 20
+000186 6E0C       00404 	MOVWF t,0
+000188 6A0D       00405 	CLRF  t+1,0
+00018A DF5E       00406 	RCALL bekle
+                  00407 			;	disp=kom;
+00018C C00B FF83  00408 	MOVFF kom,disp
+                  00409 			;	rs=0;
+000190 9284       00410 	BCF   0xF84,rs,0
+                  00411 			;	e=0;
+000192 9084       00412 	BCF   0xF84,e,0
+                  00413 			;	e=1;
+000194 8084       00414 	BSF   0xF84,e,0
+                  00415 			;}
+000196 0012       00416 	RETURN
+                  00417 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00418 			;void LcdYaz(char c) // Gelen karakteri ekrana basan fonksiyon
+                  00419 			;{
+                  00420 LcdYaz
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 8
+
+ADDR   CODE       LINE  SOURCE
+
+000198 6E0B       00421 	MOVWF c,0
+                  00422 			;	bekle(50);
+00019A 0E32       00423 	MOVLW 50
+00019C 6E0C       00424 	MOVWF t,0
+00019E 6A0D       00425 	CLRF  t+1,0
+0001A0 DF53       00426 	RCALL bekle
+                  00427 			;	disp=c;
+0001A2 C00B FF83  00428 	MOVFF c,disp
+                  00429 			;	rs=1;
+0001A6 8284       00430 	BSF   0xF84,rs,0
+                  00431 			;	e=0;
+0001A8 9084       00432 	BCF   0xF84,e,0
+                  00433 			;	e=1;
+0001AA 8084       00434 	BSF   0xF84,e,0
+                  00435 			;	bekle(1);	
+0001AC 0E01       00436 	MOVLW 1
+0001AE 6E0C       00437 	MOVWF t,0
+0001B0 6A0D       00438 	CLRF  t+1,0
+0001B2 D74A       00439 	BRA   bekle
+                  00440 			;}
+                  00441 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00442 			;void LcdInit() // LCD ekranýn kullaným özelliklerini belirleyen fonksiyon
+                  00443 			;{
+                  00444 LcdInit
+                  00445 			;	rw=0;			// LCD' ye yazdýrma
+0001B4 9484       00446 	BCF   0xF84,rw,0
+                  00447 			;	e=1;			// LCD aktif edildi
+0001B6 8084       00448 	BSF   0xF84,e,0
+                  00449 			;	rs=1;			// Yazmaç seçimi
+0001B8 8284       00450 	BSF   0xF84,rs,0
+                  00451 			;	LcdKomut(0x38);	
+0001BA 0E38       00452 	MOVLW 56
+0001BC DFE2       00453 	RCALL LcdKomut
+                  00454 			;	LcdKomut(0x01);	//Clear display
+0001BE 0E01       00455 	MOVLW 1
+0001C0 DFE0       00456 	RCALL LcdKomut
+                  00457 			;	LcdKomut(0x0C); //Dont display cursor,Blink off
+0001C2 0E0C       00458 	MOVLW 12
+0001C4 DFDE       00459 	RCALL LcdKomut
+                  00460 			;	LcdKomut(0x06); //Increment ddram adres, do not shift disp.
+0001C6 0E06       00461 	MOVLW 6
+0001C8 D7DC       00462 	BRA   LcdKomut
+                  00463 			;}
+                  00464 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00465 			;void MesajYaz(const char *msj,unsigned adr)
+                  00466 			;{
+                  00467 MesajYaz
+0001CA 6E07       00468 	MOVWF adr,0
+                  00469 			;	unsigned i,j,k;
+                  00470 			;	i=0;
+0001CC 6A08       00471 	CLRF  i,0
+                  00472 			;	while(msj[i]!=0) //Gelen mesajýn boyutunun bulunmasý
+0001CE 5008       00473 m022	MOVF  i,W,0
+0001D0 2406       00474 	ADDWF msj,W,0
+0001D2 D819       00475 	RCALL _const1
+0001D4 0A00       00476 	XORLW 0
+0001D6 B4D8       00477 	BTFSC 0xFD8,Zero_,0
+0001D8 D002       00478 	BRA   m023
+                  00479 			;		i++;
+0001DA 2A08       00480 	INCF  i,1,0
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 9
+
+ADDR   CODE       LINE  SOURCE
+
+0001DC D7F8       00481 	BRA   m022
+                  00482 			;	
+                  00483 			;	LcdKomut(adr);
+0001DE 5007       00484 m023	MOVF  adr,W,0
+0001E0 DFD0       00485 	RCALL LcdKomut
+                  00486 			;	for(j=0;j<i;j++) //LcdYaz fonksiyonu içine, mesajýn karakterleri tek tek yollanýyor.
+0001E2 6A09       00487 	CLRF  j,0
+0001E4 5008       00488 m024	MOVF  i,W,0
+0001E6 6009       00489 	CPFSLT j,0
+0001E8 D00D       00490 	BRA   m027
+                  00491 			;	{
+                  00492 			;		LcdYaz(msj[j]);
+0001EA 5009       00493 	MOVF  j,W,0
+0001EC 2406       00494 	ADDWF msj,W,0
+0001EE D80B       00495 	RCALL _const1
+0001F0 DFD3       00496 	RCALL LcdYaz
+                  00497 			;		for(k=0;k<30;k++) //30 cycle boyunca bekleme yarat
+0001F2 6A0A       00498 	CLRF  k,0
+0001F4 0E1E       00499 m025	MOVLW 30
+0001F6 600A       00500 	CPFSLT k,0
+0001F8 D003       00501 	BRA   m026
+                  00502 			;			nop();
+0001FA 0000       00503 	NOP  
+0001FC 2A0A       00504 	INCF  k,1,0
+0001FE D7FA       00505 	BRA   m025
+                  00506 			;	}
+000200 2A09       00507 m026	INCF  j,1,0
+000202 D7F0       00508 	BRA   m024
+                  00509 			;}
+000204 0012       00510 m027	RETURN
+                  00511 _const1
+000206 6E0B       00512 	MOVWF ci,0
+000208 500B       00513 	MOVF  ci,W,0
+00020A 0F1C       00514 	ADDLW 28
+00020C 6EF6       00515 	MOVWF TBLPTR,0
+00020E 0E02       00516 	MOVLW 2
+000210 6AF7       00517 	CLRF  TBLPTR+1,0
+000212 22F7       00518 	ADDWFC TBLPTR+1,1,0
+000214 6AF8       00519 	CLRF  TBLPTR+2,0
+000216 0008       00520 	TBLRD *
+000218 50F5       00521 	MOVF  TABLAT,W,0
+00021A 0012       00522 	RETURN
+00021C 7554       00523 	DW    0x7554
+00021E 6173       00524 	DW    0x6173
+000220 6220       00525 	DW    0x6220
+000222 7361       00526 	DW    0x7361
+000224 6E69       00527 	DW    0x6E69
+000226 7A69       00528 	DW    0x7A69
+000228 4200       00529 	DW    0x4200
+00022A 7361       00530 	DW    0x7361
+00022C 6C69       00531 	DW    0x6C69
+00022E 6E61       00532 	DW    0x6E61
+000230 5420       00533 	DW    0x5420
+000232 7375       00534 	DW    0x7375
+000234 3A20       00535 	DW    0x3A20
+000236 0020       00536 	DW    0x20
+000238 0201       00537 	DW    0x201
+00023A 0003       00538 	DW    0x3
+00023C 0504       00539 	DW    0x504
+00023E 0006       00540 	DW    0x6
+CC8E Version 1.3E,   File: berna.c             13. Jan 2013  20:41   Page 10
+
+ADDR   CODE       LINE  SOURCE
+
+000240 0807       00541 	DW    0x807
+000242 0009       00542 	DW    0x9
+000244 000F       00543 	DW    0xF
+000246 000F       00544 	DW    0xF
+000248 002A       00545 	DW    0x2A
+00024A 0023       00546 	DW    0x23
+00024C 0037       00547 	DW    0x37
+00024E 0038       00548 	DW    0x38
+000250 0039       00549 	DW    0x39
+000252 0030       00550 	DW    0x30
+000254 0031       00551 	DW    0x31
+000256 0032       00552 	DW    0x32
+000258 0033       00553 	DW    0x33
+00025A 0034       00554 	DW    0x34
+00025C 0035       00555 	DW    0x35
+00025E 0036       00556 	DW    0x36
+                  00557 
+                  00558 	END
+                  00559 
+                  00560 
+                  00561 ; *** KEY INFO ***
+                  00562 
+                  00563 ; 0x000038    8 word(s)  0 % : ayarlar
+                  00564 ; 0x000048   17 word(s)  0 % : bekle
+                  00565 ; 0x00006A  140 word(s)  0 % : oku_yaz
+                  00566 ; 0x0001B4   11 word(s)  0 % : LcdInit
+                  00567 ; 0x000198   14 word(s)  0 % : LcdYaz
+                  00568 ; 0x000182   11 word(s)  0 % : LcdKomut
+                  00569 ; 0x0001CA   30 word(s)  0 % : MesajYaz
+                  00570 ; 0x000008    5 word(s)  0 % : int_server
+                  00571 ; 0x000012   19 word(s)  0 % : main
+                  00572 ; 0x000206   45 word(s)  0 % : _const1
+                  00573 
+                  00574 ; RAM usage: 15 bytes (15 local), 1521 bytes free
+                  00575 ; Maximum call level: 3 (+5 for interrupt)
+                  00576 ; Total of 302 code words (1 %)
