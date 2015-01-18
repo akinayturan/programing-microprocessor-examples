@@ -1,0 +1,7 @@
+LED Iþýk Oyunu: LED’leri sýrasýyla 1-8-2-7-3-6-4-5-4-6-3-7-2-8-1 þeklinde yakan yinelemeli programý yazýnýz. 
+
+  Programýn yazýlým kýsmýnda, LEDler sýrasý ile istenen þekilde yanmaya baþlamaktadýr her hangi bir baþlangýç ve bitiþ durumu olmadýðýndan devre kurulur kurulmaz BASLA etiketi ile döngüye girmektedir ve tekrarlý olarak 1-8-2-7-3-6-4-5-4-6-3-7-2-8-1 þeklinde LEDler yanmaktadýr. GOTO BASLA etiketi ile BASLA etiketine tekrarlý sonsuz döngü saðlanmýþtýr. LEDlerin yandýðý gözle görülebilmesi için her LED yakma adýmýnda, adýma 0,2 saniyelik, 2 þer adet DELAY döngüsü konulmuþtur. Reset butonuna basýldýðýnda ise en baþ duruma geri dönmektedir. 
+
+     Programýn devre kýsmýnda ise, kullanýlan tek buton vardýr ve buton reset görevi yapmaktadýr butona basýlana kadar topraða baðlý kýsýmdan high gelirken butona basýldýðýnda low gönderilmeye baþlar yani high to low tekniði vardýr. Yüke baðlý dirençler buton basýldýðýnda sisteme ani akým iletimini engellemek amacý ile koyulmuþ bulunmaktadýr. LEDlere baðlý dirençler ise gelebilecek ani akýmý engellemek amacý ile koyulmuþtur. Clock dalgalarýný göndermek için R-C devresi kullanýlmýþtýr. LEDlerin çýkýþý topraða baðlanmýþtýr böylelikle devreden high geldiði zaman topraða doðru akým geçecek ve LEDler yanmaya baþlayacaktýr.
+    
+     Bir sonraki sayfada akýþ diyagramý yer almakta ardýndan yazýlým kodlarý ayrýntýlý olarak adým adým açýklanarak verilmiþtir.
