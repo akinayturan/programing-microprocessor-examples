@@ -1,0 +1,27 @@
+CC8E Version 1.4, Copyright (c) B Knudsen Data, Norway 2001-2014
+ --> FREE edition, 8-16 bit int, 24 bit float, 128k code words, reduced optim.
+l.c:
+ 15. Dec 2014  10:45
+ Chip = 18F452
+ RAM : ======== =******* ******** ******** ******** ******** ******** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: ******** ******** ******** ******** ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** ******** ********
+ Bank  0:247  1:256  2:256  3:256  4:256  5:256  bytes free
+RAM usage: 9 bytes (9 local), 1527 bytes free
+ File 'l.fcs'
+ Optimizing - removed 28 code words (-18 %)
+ File 'l.var'
+ File 'l.asm'
+ File 'l.lst'
+ File 'l.cod'
+ File 'l.occ'
+Warning[1] C:\Documents and Settings\Mikrolab01\Desktop\l5.3\l.c 45 : Read-modify-write sequence on the same PORT may fail
+ (Two consecutive instructions modifying the same PORT may fail depending on
+ execution speed and load (fall/rise times) on the port pins. Option -wf will
+ remove this warning)
+Warning[2] C:\Documents and Settings\Mikrolab01\Desktop\l5.3\l.c 54 : Read-modify-write sequence on the same PORT may fail
+Warning[3] C:\Documents and Settings\Mikrolab01\Desktop\l5.3\l.c 63 : Read-modify-write sequence on the same PORT may fail
+ File 'l.hex'
+Total of 133 code words (0 %)
+ * Estimated CODE SIZE of full optimization: 129 code words (-3 %)
