@@ -1,0 +1,227 @@
+CC8E Version 1.4,   File: l.c                 15. Dec 2014  10:31   Page 1
+
+ADDR   CODE       LINE  SOURCE
+
+                  00001 
+                  00002 ; CC8E Version 1.4, Copyright (c) B Knudsen Data
+                  00003 ; C compiler for the PIC18 microcontrollers
+                  00004 ; ************  15. Dec 2014  10:31  *************
+                  00005 
+                  00006 	processor  PIC18F452
+                  00007 	radix  DEC
+                  00008 
+300000 F1FF       00009 	__config 0x300001, 0xF1
+                  00010 	__config 0x300002, 0xF8
+300002 FEF8       00011 	__config 0x300003, 0xFE
+                  00012 
+       0002       00013 Zero_       EQU   2
+       0FAF       00014 SPBRG       EQU   0xFAF
+       0FAD       00015 TXREG       EQU   0xFAD
+       0F96       00016 TRISE       EQU   0xF96
+       0F95       00017 TRISD       EQU   0xF95
+       0F94       00018 TRISC       EQU   0xF94
+       0F93       00019 TRISB       EQU   0xF93
+       0F92       00020 TRISA       EQU   0xF92
+       0F83       00021 PORTD       EQU   0xF83
+       0F82       00022 PORTC       EQU   0xF82
+       0F81       00023 PORTB       EQU   0xF81
+       0007       00024 GIE         EQU   7
+       0002       00025 BRGH        EQU   2
+       0004       00026 SYNC        EQU   4
+       0005       00027 TXEN        EQU   5
+       0006       00028 TX9         EQU   6
+       0007       00029 SPEN        EQU   7
+       0004       00030 TXIF        EQU   4
+       0004       00031 TXIE        EQU   4
+       0000       00032 sayi        EQU   0x00
+       0001       00033 deger       EQU   0x01
+       0001       00034 t           EQU   0x01
+       0003       00035 x           EQU   0x03
+                  00036 
+000000 EF02 F000  00037 	GOTO main
+                  00038 
+                  00039   ; FILE l.c
+                  00040 			;#pragma config[1] = 0xF1 // Osilatör: XT
+                  00041 			;#pragma config[2] = 0xFE & 0xF9 // PWRT açýk, BOR kapalý
+                  00042 			;#pragma config[3] = 0xFE // WatchdogTimer kapalý
+                  00043 			;
+                  00044 			;void ayarlar();
+                  00045 			;void seriTXayar();
+                  00046 			;void serigonder(unsigned deger);
+                  00047 			;void bekle(unsigned long t);	// t milisaniye gecikme saðlayan fonksiyon tanýmý
+                  00048 			;
+                  00049 			;void main()
+                  00050 			;{	
+                  00051 main
+                  00052 			;	unsigned sayi='0';
+000004 0E30       00053 	MOVLW 48
+000006 6E00       00054 	MOVWF sayi,0
+                  00055 			;	ayarlar();
+000008 D80E       00056 	RCALL ayarlar
+                  00057 			;
+                  00058 			;//-----------------------------------------------	
+                  00059 			;anadongu:
+                  00060 			;	serigonder(sayi);
+CC8E Version 1.4,   File: l.c                 15. Dec 2014  10:31   Page 2
+
+ADDR   CODE       LINE  SOURCE
+
+00000A 5000       00061 m001	MOVF  sayi,W,0
+00000C D818       00062 	RCALL serigonder
+                  00063 			;	bekle(1000);
+00000E 0EE8       00064 	MOVLW 232
+000010 6E01       00065 	MOVWF t,0
+000012 0E03       00066 	MOVLW 3
+000014 6E02       00067 	MOVWF t+1,0
+000016 D828       00068 	RCALL bekle
+                  00069 			;	sayi++;
+000018 2A00       00070 	INCF  sayi,1,0
+                  00071 			;	if(sayi>'9')
+00001A 0E39       00072 	MOVLW 57
+00001C 6400       00073 	CPFSGT sayi,0
+00001E D7F5       00074 	BRA   m001
+                  00075 			;	{
+                  00076 			;		sayi='0';
+000020 0E30       00077 	MOVLW 48
+000022 6E00       00078 	MOVWF sayi,0
+                  00079 			;	}
+                  00080 			;
+                  00081 			;goto anadongu;
+000024 D7F2       00082 	BRA   m001
+                  00083 			;//-----------------------------------------------	
+                  00084 			;}
+                  00085 			;
+                  00086 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00087 			;
+                  00088 			;void ayarlar()	// Bütün baþlangýç ayarlarýnýn tamamlandýðý kýsým
+                  00089 			;{	
+                  00090 ayarlar
+                  00091 			;	GIE=0;			// Bütün kesmeleri kapat
+000026 9EF2       00092 	BCF   0xFF2,GIE,0
+                  00093 			;	TRISA=0xFF;
+000028 6892       00094 	SETF  TRISA,0
+                  00095 			;	TRISB=0;
+00002A 6A93       00096 	CLRF  TRISB,0
+                  00097 			;	TRISC=0;	
+00002C 6A94       00098 	CLRF  TRISC,0
+                  00099 			;	TRISD=0;
+00002E 6A95       00100 	CLRF  TRISD,0
+                  00101 			;	TRISE.0=1;
+000030 8096       00102 	BSF   TRISE,0,0
+                  00103 			;	TRISE.1=1;
+000032 8296       00104 	BSF   TRISE,1,0
+                  00105 			;	TRISE.2=1;
+000034 8496       00106 	BSF   TRISE,2,0
+                  00107 			;	
+                  00108 			;	PORTC=0;		
+000036 6A82       00109 	CLRF  PORTC,0
+                  00110 			;	PORTD=0;
+000038 6A83       00111 	CLRF  PORTD,0
+                  00112 			;	PORTB=0;
+00003A 6A81       00113 	CLRF  PORTB,0
+                  00114 			;	
+                  00115 			;	seriTXayar();
+00003C D00A       00116 	BRA   seriTXayar
+                  00117 			;
+                  00118 			;	
+                  00119 			;}
+                  00120 			;//////////////////////////////////////////////////////////////////////////////////
+CC8E Version 1.4,   File: l.c                 15. Dec 2014  10:31   Page 3
+
+ADDR   CODE       LINE  SOURCE
+
+                  00121 			;
+                  00122 			;
+                  00123 			;void serigonder(unsigned deger)	// Seri porttan veri gönderir
+                  00124 			;{	
+                  00125 serigonder
+00003E 6E01       00126 	MOVWF deger,0
+                  00127 			;	while(!TXIF);
+000040 A89E       00128 m002	BTFSS 0xF9E,TXIF,0
+000042 D7FE       00129 	BRA   m002
+                  00130 			;	nop(); nop(); nop(); nop();
+000044 0000       00131 	NOP  
+000046 0000       00132 	NOP  
+000048 0000       00133 	NOP  
+00004A 0000       00134 	NOP  
+                  00135 			;	TXREG=deger;
+00004C C001 FFAD  00136 	MOVFF deger,TXREG
+                  00137 			;}
+000050 0012       00138 	RETURN
+                  00139 			;
+                  00140 			;
+                  00141 			;//////////////////////////////////////////////////////////////////////////////////
+                  00142 			;
+                  00143 			;
+                  00144 			;void seriTXayar()	// Seri Portu veri göndermeye hazýr hale getirir
+                  00145 			;{
+                  00146 seriTXayar
+                  00147 			;	TRISC.6=0;
+000052 9C94       00148 	BCF   TRISC,6,0
+                  00149 			;	TRISC.7=1;
+000054 8E94       00150 	BSF   TRISC,7,0
+                  00151 			;	SPBRG=25;	// Baud Rate=9.6k
+000056 0E19       00152 	MOVLW 25
+000058 6EAF       00153 	MOVWF SPBRG,0
+                  00154 			;	BRGH=1;		// Yüksek Hýz
+00005A 84AC       00155 	BSF   0xFAC,BRGH,0
+                  00156 			;	SYNC=0;		// Asenkron mod
+00005C 98AC       00157 	BCF   0xFAC,SYNC,0
+                  00158 			;	SPEN=1;		// Seri port etkin
+00005E 8EAB       00159 	BSF   0xFAB,SPEN,0
+                  00160 			;	TXIE=0;
+000060 989D       00161 	BCF   0xF9D,TXIE,0
+                  00162 			;	TX9=0;		// 8 bit Veri Gönderme
+000062 9CAC       00163 	BCF   0xFAC,TX9,0
+                  00164 			;	TXEN=1;	// Gönderme etkin	
+000064 8AAC       00165 	BSF   0xFAC,TXEN,0
+                  00166 			;}
+000066 0012       00167 	RETURN
+                  00168 			;
+                  00169 			;//////////////////////////////////////////////////////////////////////////////////////////////////
+                  00170 			;
+                  00171 			;void bekle(unsigned long t)	//t milisaniye gecikme saðlar
+                  00172 			;{
+                  00173 bekle
+                  00174 			;	unsigned x;
+                  00175 			;	
+                  00176 			;	for(;t>0;t--)
+000068 5001       00177 m003	MOVF  t,W,0
+00006A 1002       00178 	IORWF t+1,W,0
+00006C B4D8       00179 	BTFSC 0xFD8,Zero_,0
+00006E D00C       00180 	BRA   m006
+CC8E Version 1.4,   File: l.c                 15. Dec 2014  10:31   Page 4
+
+ADDR   CODE       LINE  SOURCE
+
+                  00181 			;		for(x=90;x>0;x--)
+000070 0E5A       00182 	MOVLW 90
+000072 6E03       00183 	MOVWF x,0
+000074 5203       00184 m004	MOVF  x,1,0
+000076 B4D8       00185 	BTFSC 0xFD8,Zero_,0
+000078 D003       00186 	BRA   m005
+                  00187 			;			nop();
+00007A 0000       00188 	NOP  
+00007C 0603       00189 	DECF  x,1,0
+00007E D7FA       00190 	BRA   m004
+000080 0601       00191 m005	DECF  t,1,0
+000082 0E00       00192 	MOVLW 0
+000084 5A02       00193 	SUBWFB t+1,1,0
+000086 D7F0       00194 	BRA   m003
+                  00195 			;}
+000088 0012       00196 m006	RETURN
+                  00197 
+                  00198 	END
+                  00199 
+                  00200 
+                  00201 ; *** KEY INFO ***
+                  00202 
+                  00203 ; 0x000026   12 word(s)  0 % : ayarlar
+                  00204 ; 0x000052   11 word(s)  0 % : seriTXayar
+                  00205 ; 0x00003E   10 word(s)  0 % : serigonder
+                  00206 ; 0x000068   17 word(s)  0 % : bekle
+                  00207 ; 0x000004   17 word(s)  0 % : main
+                  00208 
+                  00209 ; RAM usage: 4 bytes (4 local), 1532 bytes free
+                  00210 ; Maximum call level: 1
+                  00211 ; Total of 69 code words (0 %)

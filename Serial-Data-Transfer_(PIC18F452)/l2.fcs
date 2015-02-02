@@ -1,0 +1,33 @@
+
+CC8E Version 1.4, Copyright (c) B Knudsen Data.
+* FUNCTION CALL STRUCTURE
+
+F: main                   :#0 
+    ayarlar               : #1 
+    serial                : #1 
+    serigonder            : #1 
+    bekle                 : #1 
+
+F: ayarlar                :#1 
+    seriTXayar            : #1 
+    seriRXayar            : #1 
+
+F: serigonder             :#1 
+
+F: seriTXayar             :#1 
+
+F: bekle                  :#1 
+
+F: serial                 :#1 
+
+F: seriRXayar             :#1 
+
+
+ L0  main
+ L1    ayarlar
+ L2      seriTXayar
+ L1      seriRXayar [T-GOTO]
+ L1    serial
+ L1    serigonder
+ L1    bekle
+
